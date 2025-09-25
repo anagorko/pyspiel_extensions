@@ -8,7 +8,7 @@ namespace subtraction_game {
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(shared_library, m) {
+void init_subtraction_game_bindings(py::module_& m) {
     m.doc() = "pybind11 extension for pyspiel additions";
 
     m.def("load_game",

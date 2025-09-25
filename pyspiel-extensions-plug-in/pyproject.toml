@@ -1,0 +1,38 @@
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "pyspiel_extensions.plug_in"
+version = "1.0"
+requires-python = ">=3.10"
+
+dependencies = [
+    "pytest"
+]
+
+[tool.scikit-build]
+cmake.source-dir = "."
+build.verbose = false
+logging.level = "WARNING"
+editable.rebuild = true
+editable.mode = "redirect"
+editable.verbose = true
+build-dir = "../build/plug_in/"
+# "Debug", "Release", "RelWithDebInfo"
+cmake.build-type = "Debug"
+
+cmake.args = [
+    "-DCMAKE_CXX_FLAGS=",
+    "-DCMAKE_C_FLAGS="
+]
+
+[tool.scikit-build.cmake.define]
+CMAKE_C_COMPILER = "clang"
+CMAKE_CXX_COMPILER = "clang++"
+
+# Do not print list of copied files in the install step
+CMAKE_INSTALL_MESSAGE = "NEVER"
+
+[tool.scikit-build.wheel]
+packages = ["src/pyspiel_extensions"]

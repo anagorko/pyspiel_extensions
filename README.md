@@ -1,12 +1,20 @@
 # Comparison of open_spiel / pyspiel extension methods.
 
-The goal of this project is to extend **open_spiel** and **pyspiel** without modifying the original codebase,
-  with possibility to run in **editable mode**.
-Few options are discussed below.
+The goal of this project is to investigate methods of extending **open_spiel** without modifying the original codebase,
+  with possibility to run **pyspiel** in **editable mode**.
 
-Two extensions are implemented:
-- `extensions/backward_induction` - a sample algorithm;
+For testing, the following additions to open_spiel are implemented:
+- `extensions/perft` - a sample algorithm;
+- `extensions/perft_executable` - a standalone executeble;
 - `extensions/subtraction_game` - a sample game.
+
+Two extension methods are implemented:
+- Linking with a shared library. **This method doesn't work properly.**
+- Plug-in method, where pyspiel.so symbols are loaded into global namespace and found by dynamic loader at runtime.
+
+Two more extension methods are discussed:
+- Wrapping open_spiel's build process with custom CMakeLists.txt. In my project I abandoned this method in favor of the plug-in method so I don't provide implementation details here.
+- Linking both pyspiel.so and the extension module dynamically against libopen_spiel.so.
 
 ## Prerequisites
 
@@ -49,7 +57,18 @@ cd ../..
 python -c "import pyspiel; print(pyspiel.load_game('tic_tac_toe'))"
 ```
 
+Your IDE likely uses compile_commands.json. To generate or update it, run:
+```
+mkdir build
+cd build
+cmake .. -G Ninja
+ninja
+cd ..
+```
+
 ## Option A. `shared_library`: OpenSpiel as a C++ Library
+
+Please note that this method **doesn't work** properly.
 
 We follow the instructions from the [Using OpenSpiel as a C++ Library]().
 
@@ -99,3 +118,5 @@ python -m pip install -v -e wrapper_package
 ```
 
 ## Option C. `plug_in`: Compiling extensions alongside OpenSpiel.
+
+## Option D. Reworking OpenSpiel's build process.

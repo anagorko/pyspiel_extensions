@@ -1,0 +1,32 @@
+diff --git a/setup.py b/setup.py
+index 723c2a5a..2f42f733 100644
+--- a/setup.py
++++ b/setup.py
+@@ -20,6 +20,7 @@ See https://setuptools.readthedocs.io/en/latest/setuptools.html
+ import os
+ import subprocess
+ import sys
++import shutil
+ 
+ import setuptools
+ from setuptools.command.build_ext import build_ext
+@@ -76,6 +77,19 @@ class BuildExt(build_ext):
+   def build_extension(self, ext):
+     extension_dir = os.path.abspath(
+         os.path.dirname(self.get_ext_fullpath(ext.name)))
++
++    # Check for an environment variable to use a pre-compiled .so file
++    pyspiel_so_path = os.environ.get("PYSPIEL_SO_PATH")
++    if pyspiel_so_path:
++        print(f"--- Found PYSPIEL_SO_PATH: {pyspiel_so_path}")
++        print(f"--- Skipping build and copying file to {extension_dir}")
++        if not os.path.exists(extension_dir):
++            os.makedirs(extension_dir)
++        # The destination filename must match the extension's final name
++        destination_file = os.path.join(extension_dir, os.path.basename(self.get_ext_filename(ext.name)))
++        shutil.copyfile(pyspiel_so_path, destination_file)
++        return # Exit the function to prevent compilation
++
+     cxx = "clang++"
+     if os.environ.get("CXX") is not None:
+       cxx = os.environ.get("CXX")

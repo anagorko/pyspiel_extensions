@@ -1,13 +1,13 @@
+#pragma once
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+
+namespace py = pybind11;
 
 namespace pyspiel_extensions {
 namespace backward_induction {
 
-namespace py = pybind11;
-
-void init_backward_induction_bindings(py::module_& m) {
-}
+// Declares the function that will add the backward_induction bindings.
+void init_backward_induction_bindings(py::module_& m);
 
 }  // namespace backward_induction
 }  // namespace pyspiel_extensions
